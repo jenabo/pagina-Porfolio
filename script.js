@@ -1,4 +1,4 @@
-const STORAGE_KEY = "enekoProjects";
+const STORAGE_KEY = "jenaboProjects";
 const ADMIN_PIN = "1234";
 const LATEST_LIMIT = 3;
 const CAROUSEL_INTERVAL = 6000;
