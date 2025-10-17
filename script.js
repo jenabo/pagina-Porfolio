@@ -1,5 +1,13 @@
 const STORAGE_KEY = "jenaboProjects";
-const ADMIN_PIN = "1234";
+const encodePass = (str) =>
+  Array.from(str)
+    .map((c) => c.charCodeAt(0).toString(16).padStart(2, "0"))
+    .join("");
+const decodePass = (hex) =>
+  hex.match(/.{1,2}/g)
+    ?.map((part) => String.fromCharCode(parseInt(part, 16)))
+    .join("") || "";
+const ADMIN_PIN_ENCODED = "4a336e4062305f5030727466306c216f5f326f3234"; 
 const LATEST_LIMIT = 3;
 const CAROUSEL_INTERVAL = 6000;
 
@@ -585,19 +593,6 @@ const showToast = (message) => {
   }, 3200);
 };
 
-document.addEventListener("contextmenu", (event) => {
-  event.preventDefault();
-});
-
-document.addEventListener("dragstart", (event) => {
-  event.preventDefault();
-});
-
-document.addEventListener("copy", (event) => {
-  event.preventDefault();
-  showToast("Accion deshabilitada");
-});
-
 const updateAdminUI = () => {
   if (!adminAccess || !adminForm || !adminLogout || !adminProjectList) return;
 
@@ -915,7 +910,7 @@ typeSelect?.addEventListener("change", () => {
 processMediaHelpers();
 
 adminLogin?.addEventListener("click", () => {
-  if (adminPass?.value === ADMIN_PIN) {
+  if (adminPass?.value && encodePass(adminPass.value) === ADMIN_PIN_ENCODED) {
     toggleAdminMode(true);
   } else {
     showToast("PIN incorrecto");
@@ -987,18 +982,6 @@ document.addEventListener("keydown", (event) => {
   const tagName = event.target && "tagName" in event.target ? event.target.tagName.toLowerCase() : "";
   const isTypingContext =
     tagName === "input" || tagName === "textarea" || tagName === "select" || event.target?.isContentEditable;
-
-  const ctrlOrCmd = event.ctrlKey || event.metaKey;
-  const blockedShortcut =
-    key === "f12" ||
-    (ctrlOrCmd && event.shiftKey && (key === "i" || key === "j" || key === "c")) ||
-    (ctrlOrCmd && (key === "u" || key === "s" || key === "p"));
-
-  if (blockedShortcut) {
-    event.preventDefault();
-    showToast("Atajo deshabilitado");
-    return;
-  }
 
   if (event.shiftKey && key === "o" && !isTypingContext) {
     event.preventDefault();

@@ -173,16 +173,18 @@ ul {
   gap: 18px;
 }
 
-.highlight-number {
+.highlight-title {
   font-size: 1.15rem;
   font-weight: 700;
   color: white;
   display: block;
+  margin: 0 0 4px;
 }
 
 .highlight-label {
   font-size: 0.85rem;
   color: var(--neutral-muted);
+  margin: 0;
 }
 
 section {
