@@ -1,3 +1,4 @@
+const PROJECT_SEED_DATA = window.JENABO_PROJECT_SEED_DATA || [];
 const STORAGE_KEY = "jenaboProjects";
 const ADMIN_PIN = "1234";
 const LATEST_LIMIT = 3;
@@ -58,6 +59,29 @@ const adminSubmitButton = adminForm?.querySelector('button[type="submit"]');
 
 const toast = document.getElementById("toast");
 
+const MOTION_EASING = "cubic-bezier(0.4, 0, 0.2, 1)";
+const MOTION_DURATION = 360;
+
+const prefersReducedMotion = () =>
+  Boolean(window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches);
+
+const animateElement = (element, keyframes, options = {}) => {
+  if (!element || typeof element.animate !== "function" || prefersReducedMotion()) {
+    return null;
+  }
+  try {
+    return element.animate(keyframes, options);
+  } catch {
+    return null;
+  }
+};
+
+const toArray = (value) => {
+  if (!value) return [];
+  if (Array.isArray(value)) return value;
+  return Array.from(value);
+};
+
 let projects = [];
 let adminMode = false;
 let adminPanelVisible = false;
@@ -67,6 +91,7 @@ let latestIndex = 0;
 let carouselTimer = null;
 let editingProjectId = null;
 let latestItems = [];
+let latestHasAnimated = false;
 
 const CATEGORY_OPTIONS = {
   web: [
@@ -220,69 +245,7 @@ const processMediaFile = async (type, file) => {
   }
 };
 
-const seedProjects = () => [
-  normalizeProject({
-    id: generateId(),
-    type: "web",
-    title: "Landing para Kiosco Punto Norte",
-    category: "Web - Negocio local",
-    description:
-      "Pagina simple con menu actualizado, promos del dia y boton directo a WhatsApp para pedidos.",
-    extendedDescription:
-      "Charlamos con las duenas del kiosco para entender que necesitaban mostrar y que preguntas se repetian. Armamos una landing liviana con productos clave, promos rotativas y un formulario que llega al correo y al celular.",
-    tags: ["One Page", "Responsive", "WhatsApp"],
-    previewUrl: "https://www.awwwards.com",
-    imageUrl:
-      "https://images.unsplash.com/photo-1504753793650-d4a2b783c15e?auto=format&fit=crop&w=1400&q=80",
-    date: "2024-03-22T10:15:00.000Z",
-  }),
-  normalizeProject({
-    id: generateId(),
-    type: "programas",
-    title: "Mini sistema de pedidos Pastas Lola",
-    category: "Programas - Emprendimiento familiar",
-    description:
-      "App web sencilla para cargar pedidos, calcular tiempos de entrega y avisar cuando estan listos.",
-    extendedDescription:
-      "El objetivo era dejar de depender del cuaderno. Hicimos pantallas grandes para usar desde una tablet y sumamos un tablero con el estado de cada pedido. Incluye recordatorios por WhatsApp y un historico exportable.",
-    tags: ["Web App", "Automatizacion", "Notificaciones"],
-    previewUrl: "https://github.com",
-    videoUrl: "https://www.youtube.com/watch?v=2wEAo-lC_8I",
-    imageUrl:
-      "https://images.unsplash.com/photo-1523475472560-d2df97ec485c?auto=format&fit=crop&w=1200&q=80",
-    date: "2024-03-12T09:00:00.000Z",
-  }),
-  normalizeProject({
-    id: generateId(),
-    type: "logos",
-    title: "Logo y grafica Escuela Horizonte",
-    category: "Logos y branding",
-    description:
-      "Redisenamos el escudo, la tipografia y la carteleria para modernizar la imagen de la escuela.",
-    extendedDescription:
-      "Trabajamos con directivos y estudiantes para elegir colores y simbolos que representen la historia del colegio. Entregamos logo adaptable, plantillas para comunicados y carteles para las aulas.",
-    tags: ["Identidad visual", "Carteleria", "Guia de uso"],
-    previewUrl: "https://www.behance.net",
-    imageUrl:
-      "https://images.unsplash.com/photo-1545239351-1141bd82e8a6?auto=format&fit=crop&w=1200&q=80",
-    date: "2024-02-18T13:20:00.000Z",
-  }),
-  normalizeProject({
-    id: generateId(),
-    type: "web",
-    title: "Sitio actualizado Estudio Contable Rivera",
-    category: "Web - Servicio profesional",
-    description:
-      "Redisenamos la web con secciones claras, agenda de turnos y recursos para clientes nuevos.",
-    extendedDescription:
-      "Organizamos la informacion para que cualquier persona entienda que hace el estudio y por donde empezar. Integramos un calendario para coordinar reuniones y un area privada con descargables.",
-    tags: ["Multiseccion", "Calendario", "CMS"],
-    previewUrl: "https://dribbble.com",
-    imageUrl:
-      "https://images.unsplash.com/photo-1521737604893-d14cc237f11d?auto=format&fit=crop&w=1200&q=80",
-    date: "2024-01-28T18:40:00.000Z",
-  }),
-];
+const seedProjects = () => PROJECT_SEED_DATA.map((project) => normalizeProject(project));
 
 const loadProjects = () => {
   const stored = localStorage.getItem(STORAGE_KEY);
@@ -349,14 +312,16 @@ const projectActionsMarkup = (project) => {
     );
   }
 
-  const hasDetail =
-    project.extendedDescription ||
-    project.videoUrl ||
-    (project.type === "logos" && project.imageUrl);
+  const canOpenModal = Boolean(
+    project.description ||
+      project.extendedDescription ||
+      project.imageUrl ||
+      project.videoUrl,
+  );
 
-  if (hasDetail) {
+  if (canOpenModal) {
     actions.push(
-      `<button class="btn ghost small project-action" data-action="detail" data-id="${project.id}">Ver detalles</button>`,
+      `<button class="btn detail small project-action" data-action="detail" data-id="${project.id}">Ver detalles</button>`,
     );
   }
 
@@ -449,7 +414,41 @@ const renderLatestMedia = (project) => {
     return `<img src="${project.imageUrl}" alt="${project.title}" loading="lazy" />`;
   }
 
-  return '<div class="project-cover placeholder"></div>';
+  return '<div class="project-cover placeholder">Sin vista previa</div>';
+};
+
+const animateLatestSections = () => {
+  animateElement(
+    latestCard,
+    [
+      { opacity: 0, transform: "translate3d(0, 18px, 0)" },
+      { opacity: 1, transform: "translate3d(0, 0, 0)" },
+    ],
+    { duration: MOTION_DURATION, easing: MOTION_EASING },
+  );
+
+  const mediaBlock = latestMedia?.firstElementChild || latestMedia;
+  if (mediaBlock) {
+    animateElement(
+      mediaBlock,
+      [
+        { opacity: 0, transform: "scale(0.96)" },
+        { opacity: 1, transform: "scale(1)" },
+      ],
+      { duration: MOTION_DURATION + 80, easing: MOTION_EASING, delay: 40 },
+    );
+  }
+
+  toArray(latestTags?.querySelectorAll("span")).forEach((chip, index) => {
+    animateElement(
+      chip,
+      [
+        { opacity: 0, transform: "translate3d(0, 6px, 0)" },
+        { opacity: 1, transform: "translate3d(0, 0, 0)" },
+      ],
+      { duration: 280, easing: MOTION_EASING, delay: 120 + index * 24 },
+    );
+  });
 };
 
 const updateLatestDots = () => {
@@ -484,14 +483,9 @@ const showLatest = (index) => {
     latestLink.style.display = "none";
   }
 
-  const hasDetail =
-    project.extendedDescription || project.videoUrl || project.imageUrl;
-  if (hasDetail) {
+  if (latestDetailBtn) {
     latestDetailBtn.dataset.id = project.id;
     latestDetailBtn.style.display = "inline-flex";
-  } else {
-    latestDetailBtn.style.display = "none";
-    delete latestDetailBtn.dataset.id;
   }
 
   latestMedia.innerHTML = renderLatestMedia(project);
@@ -500,6 +494,12 @@ const showLatest = (index) => {
   Array.from(latestDots.children).forEach((dot, dotIndex) => {
     dot.classList.toggle("active", dotIndex === latestIndex);
   });
+
+  if (latestHasAnimated) {
+    animateLatestSections();
+  } else {
+    latestHasAnimated = true;
+  }
 };
 
 const startCarouselAutoplay = () => {
@@ -767,9 +767,12 @@ const handleProjectActionClick = (event) => {
   }
 };
 
-const openProjectModal = (id, mode = "detail") => {
+const openProjectModal = (id, mode = "detail", fallbackProject = null) => {
   if (!projectModal) return;
-  const project = projects.find((item) => item.id === id);
+  const project =
+    projects.find((item) => item.id === id) ||
+    fallbackProject ||
+    latestItems.find((item) => item.id === id);
   if (!project) return;
 
   const hasVideo = Boolean(project.videoUrl);
@@ -788,7 +791,7 @@ const openProjectModal = (id, mode = "detail") => {
   } else if (project.imageUrl) {
     mediaContent = `<img src="${project.imageUrl}" alt="${project.title}" />`;
   } else {
-    mediaContent = '<div class="project-cover placeholder"></div>';
+    mediaContent = '<div class="project-cover placeholder">Sin vista previa</div>';
   }
 
   modalMedia.innerHTML = mediaContent;
@@ -969,9 +972,10 @@ latestDots?.addEventListener("click", (event) => {
 });
 
 latestDetailBtn?.addEventListener("click", () => {
-  const id = latestDetailBtn.dataset.id;
+  const fallbackProject = latestItems[latestIndex];
+  const id = latestDetailBtn.dataset.id || fallbackProject?.id;
   if (!id) return;
-  openProjectModal(id, "detail");
+  openProjectModal(id, "detail", fallbackProject || null);
 });
 
 projectModal?.addEventListener("click", (event) => {
