@@ -4,8 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Jenabo Studio</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Poppins:wght@500;700&display=swap"
       rel="stylesheet"
@@ -18,321 +16,216 @@
     />
   </head>
   <body>
-    <header class="hero">
-      <nav class="nav">
-        <div class="brand">
-          <span class="brand-accent">Jenabo</span>
-          <span>Estudio Digital</span>
-        </div>
-      </nav>
+    <header class="nav">
+      <div class="brand">
+        <span class="brand-accent">Jenabo</span>
+        <span>Estudio Digital</span>
+      </div>
+    </header>
+
+    <main class="hero">
       <div class="hero-content">
-        <h1 class="hero-title">
-          Jenabo diseña y lanza tu web, identidad o software a medida.
-        </h1>
+        <h1 class="hero-title">Logra tu identidad digital con Jenabo</h1>
         <p class="hero-subtitle">
-          Somos un estudio digital con base en Buenos Aires. Entendemos tu
-          negocio, definimos una estrategia clara y construimos experiencias que
-          representan a tu marca, desde comercios de barrio hasta instituciones
-          y empresas en expansion.
+          Somos un nuevo estudio digital centrados en el desarrollo de paginas
+          web, software y diseños graficos a tu medida para que logres tener la
+          identidad que te reprenta y destacar de la competencia.
         </p>
         <div class="hero-actions">
-          <a class="btn primary" href="#contacto">Charlemos</a>
-          <a class="btn ghost" href="#portafolio">Ver portafolio</a>
+          <a class="btn primary" href="#contacto">Contactanos</a>
+          <a class="btn ghost" href="#portfolio">Ver portfolio</a>
         </div>
         <div class="hero-highlights">
           <div>
-            <span class="highlight-number">Webs, logos y programas</span>
+            <span class="highlight-number">Paginas Web</span>
             <span class="highlight-label"
-              >Desarrollamos desde cero o modernizamos lo que ya existe.</span
+              >Mostrate en la web pa actualizate dale que se te pasa el
+              tiempo</span
             >
           </div>
           <div>
-            <span class="highlight-number">A tu medida</span>
+            <span class="highlight-number">Aplicaciones</span>
             <span class="highlight-label"
-              >Nos adaptamos al tamano y a los objetivos de cada proyecto.</span
+              >Software a medida para cubrir y automatizar tareas de tu dia a
+              dia o emprendimiento.</span
             >
           </div>
           <div>
-            <span class="highlight-number">Trabajo cercano</span>
+            <span class="highlight-number">Logos y diseños</span>
             <span class="highlight-label"
-              >Conversamos, proponemos y construimos junto a tu equipo en cada
-              etapa.</span
+              >Creación y Rebranding para redes sociales</span
             >
           </div>
         </div>
       </div>
-    </header>
 
-    <main>
-      <section class="latest" id="lo-mas-nuevo">
-        <div class="container">
-          <div class="section-header">
-            <h2>Lo mas nuevo</h2>
-            <p>
-              Seleccion de trabajos recientes que muestran como encaramos
-              paginas web, branding y soluciones a medida.
-            </p>
-          </div>
-          <div
-            class="portfolio-filters latest-filters"
-            id="latestFilters"
-            role="tablist"
-            aria-label="Filtrar novedades"
+      <br /><br />
+
+      <div class="container">
+        <h1>Ultimos trabajos</h1>
+        <div
+          class="portfolio-filters latest-filters"
+          id="latestFilters"
+          role="tablist"
+          aria-label="Filtrar novedades"
+        >
+          <button
+            class="filter-btn active"
+            data-filter="all"
+            role="tab"
+            aria-selected="true"
           >
-            <button
-              class="filter-btn active"
-              data-filter="all"
-              role="tab"
-              aria-selected="true"
-            >
-              Todo
-            </button>
-            <button
-              class="filter-btn"
-              data-filter="web"
-              role="tab"
-              aria-selected="false"
-            >
-              Web
-            </button>
-            <button
-              class="filter-btn"
-              data-filter="logos"
-              role="tab"
-              aria-selected="false"
-            >
-              Logos y branding
-            </button>
-            <button
-              class="filter-btn"
-              data-filter="programas"
-              role="tab"
-              aria-selected="false"
-            >
-              Programas
-            </button>
-          </div>
-          <div class="latest-carousel" id="latestCarousel" aria-live="polite">
-            <button
-              class="latest-nav prev"
-              id="latestPrev"
-              type="button"
-              aria-label="Anterior"
-            >
-              &larr;
-            </button>
-            <article class="latest-card" id="latestCard">
-              <div class="latest-content">
-                <span class="pill" id="latestCategory">Categoria</span>
-                <h3 id="latestTitle">Proyecto destacado</h3>
-                <p id="latestDescription">
-                  La descripcion del proyecto aparecera aca.
-                </p>
-                <div class="latest-meta">
-                  <span id="latestDate">Fecha</span>
-                  <div class="tags" id="latestTags"></div>
-                </div>
-                <div class="latest-actions">
-                  <a
-                    class="btn ghost small"
-                    id="latestLink"
-                    href="#"
-                    target="_blank"
-                    rel="noopener"
-                    style="display: none"
-                  >
-                    Ver proyecto
-                  </a>
-                  <button
-                    class="btn detail small"
-                    id="latestDetail"
-                    type="button"
-                    style="display: none"
-                  >
-                    Ver detalles
-                  </button>
-                </div>
-              </div>
-              <div class="latest-media" id="latestMedia"></div>
-            </article>
-            <button
-              class="latest-nav next"
-              id="latestNext"
-              type="button"
-              aria-label="Siguiente"
-            >
-              &rarr;
-            </button>
-          </div>
-          <div
-            class="latest-dots"
-            id="latestDots"
-            role="tablist"
-            aria-label="Cambiar proyecto destacado"
-          ></div>
-          <p class="latest-empty" id="latestEmpty">
-            Todavia no se ha cargado ningun proyecto para mostrar.
-          </p>
-        </div>
-      </section>
-
-      <section class="about" id="sobre-mi">
-        <div class="container">
-          <div class="about-card">
-            <h2>Quienes somos</h2>
-            <p>
-              Jenabo es un estudio digital creado en Buenos Aires. Nos
-              involucramos personalmente en cada proyecto: escuchamos las
-              necesidades, analizamos el contexto y definimos soluciones reales
-              sin procesos interminables. Creemos en el trabajo transparente y
-              en acompanar a cada cliente mientras crece.
-            </p>
-            <div class="about-grid">
-              <div>
-                <h3>Que hacemos desde Jenabo</h3>
-                <ul>
-                  <li>Paginas web nuevas o rediseños para cualquier rubro.</li>
-                  <li>
-                    Logos y guias visuales para darle identidad a tu marca.
-                  </li>
-                  <li>Programas y automatizaciones que simplifican tareas.</li>
-                  <li>Actualizacion de herramientas que ya usas.</li>
-                </ul>
-              </div>
-              <div>
-                <h3>Como trabajamos</h3>
-                <ul>
-                  <li>Charlamos para entender la necesidad real.</li>
-                  <li>Proponemos ideas claras antes de producir.</li>
-                  <li>Iteramos en conjunto y mostramos avances.</li>
-                  <li>Dejamos todo listo para que lo puedas usar al toque.</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="portfolio" id="portafolio">
-        <div class="container">
-          <div class="section-header">
-            <h2>Portafolio</h2>
-            <p>
-              Algunos trabajos y pruebas que venimos haciendo para negocios
-              chicos y proyectos en crecimiento.
-            </p>
-          </div>
-          <div
-            class="portfolio-filters"
-            id="portfolioFilters"
-            role="tablist"
-            aria-label="Tipo de proyecto"
+            Todo
+          </button>
+          <button
+            class="filter-btn"
+            data-filter="web"
+            role="tab"
+            aria-selected="false"
           >
-            <button
-              class="filter-btn active"
-              data-filter="all"
-              role="tab"
-              aria-selected="true"
-            >
-              Todo
-            </button>
-            <button
-              class="filter-btn"
-              data-filter="web"
-              role="tab"
-              aria-selected="false"
-            >
-              Web
-            </button>
-            <button
-              class="filter-btn"
-              data-filter="logos"
-              role="tab"
-              aria-selected="false"
-            >
-              Logos
-            </button>
-            <button
-              class="filter-btn"
-              data-filter="programas"
-              role="tab"
-              aria-selected="false"
-            >
-              Programas
-            </button>
+            Paginas Web
+          </button>
+          <button
+            class="filter-btn"
+            data-filter="logos"
+            role="tab"
+            aria-selected="false"
+          >
+            Logos/Branding
+          </button>
+          <button
+            class="filter-btn"
+            data-filter="programas"
+            role="tab"
+            aria-selected="false"
+          >
+            Aplicaciones
+          </button>
+        </div>
+        <div class="latest-carousel" id="latestCarousel" aria-live="polite">
+          <!-- <button
+            class="latest-nav prev"
+            id="latestPrev"
+            type="button"
+            aria-label="Anterior"
+          >
+            &larr;
+          </button>-->
+          <article class="latest-card" id="latestCard">
+            <div class="latest-content">
+              <span class="pill" id="latestCategory">Categoria</span>
+              <h3 id="latestTitle">Proyecto destacado</h3>
+              <p id="latestDescription">
+                La descripcion del proyecto aparecera aca.
+              </p>
+              <div class="latest-meta">
+                <span id="latestDate">Fecha</span>
+                <div class="tags" id="latestTags"></div>
+              </div>
+              <div class="latest-actions">
+                <button
+                  class="btn detail small"
+                  id="latestDetail"
+                  type="button"
+                  style="display: none"
+                >
+                  Leer más
+                </button>
+                <a
+                  class="btn ghost small"
+                  id="latestLink"
+                  href="#"
+                  target="_blank"
+                  rel="noopener"
+                  style="display: none"
+                >
+                  Visitar proyecto
+                </a>
+              </div>
+            </div>
+            <div class="latest-media" id="latestMedia"></div>
+          </article>
+        </div>
+        <div
+          class="latest-dots"
+          id="latestDots"
+          role="tablist"
+          aria-label="Cambiar proyecto destacado"
+        ></div>
+        <p class="latest-empty" id="latestEmpty">
+          Todavia no se ha cargado ningun proyecto para mostrar.
+        </p>
+      </div>
+
+      <section class="container" id="sobre-mi">
+        <h1>Quienes somos</h1>
+        <p>
+          Jenabo es un estudio digital creado en Buenos Aires. Nos involucramos
+          personalmente en cada proyecto: escuchamos las necesidades, analizamos
+          el contexto y definimos soluciones reales sin procesos interminables.
+          Creemos en el trabajo transparente y en acompanar a cada cliente
+          mientras crece.
+        </p>
+        <br />
+        <h2>Como trabajamos</h2>
+        <p>
+          Un paso a paso simple para que tengas tu web, logo o herramienta
+          funcionando sin vueltas.
+        </p>
+        <div class="process-steps">
+          <div>
+            <span class="step-number">1</span>
+            <h3>Escuchamos</h3>
+            <p>
+              Nos contas tu idea, que necesitas mejorar y que herramientas ya
+              tenes.
+            </p>
           </div>
-          <div class="portfolio-grid" id="portfolioGrid"></div>
+          <div>
+            <span class="step-number">2</span>
+            <h3>Proponemos</h3>
+            <p>
+              Armamos referencias y bocetos para validar juntos antes de
+              producir.
+            </p>
+          </div>
+          <div>
+            <span class="step-number">3</span>
+            <h3>Construimos</h3>
+            <p>
+              Diseñamos, programamos o rediseñamos segun lo acordado, mostrando
+              avances en cada entrega.
+            </p>
+          </div>
+          <div>
+            <span class="step-number">4</span>
+            <h3>Entregamos listo</h3>
+            <p>
+              Dejamos archivos, accesos y una mini guia para que puedas seguir
+              usando o mejorandolo con nosotros.
+            </p>
+          </div>
         </div>
       </section>
 
-      <section class="process">
-        <div class="container">
-          <div class="section-header">
-            <h2>Como trabajamos</h2>
-            <p>
-              Un paso a paso simple para que tengas tu web, logo o herramienta
-              funcionando sin vueltas.
-            </p>
-          </div>
-          <div class="process-steps">
-            <div class="step">
-              <span class="step-number">1</span>
-              <h3>Escuchamos</h3>
-              <p>
-                Nos contas tu idea, que necesitas mejorar y que herramientas ya
-                tenes.
-              </p>
-            </div>
-            <div class="step">
-              <span class="step-number">2</span>
-              <h3>Proponemos</h3>
-              <p>
-                Armamos referencias y bocetos para validar juntos antes de
-                producir.
-              </p>
-            </div>
-            <div class="step">
-              <span class="step-number">3</span>
-              <h3>Construimos</h3>
-              <p>
-                Diseñamos, programamos o rediseñamos segun lo acordado,
-                mostrando avances en cada entrega.
-              </p>
-            </div>
-            <div class="step">
-              <span class="step-number">4</span>
-              <h3>Entregamos listo</h3>
-              <p>
-                Dejamos archivos, accesos y una mini guia para que puedas seguir
-                usando o mejorandolo con nosotros.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section class="cta" id="contacto">
-        <div class="container">
-          <div class="cta-card">
-            <h2>Charlamos y planificamos?</h2>
-            <p>
-              Contanos tu idea o problema y te respondemos con una propuesta
-              simple y honesta.
-            </p>
-            <div class="cta-actions">
-              <a class="btn primary" href="mailto:jenaboteam@gmail.com">
-                jenaboteam@gmail.com
-              </a>
-              <a
-                class="btn ghost"
-                href="https://wa.me/5491160000000"
-                target="_blank"
-                rel="noopener"
-              >
-                Hablemos por WhatsApp
-              </a>
-            </div>
-          </div>
+      <section class="container" id="contacto">
+        <h1>Charlamos y planificamos?</h1>
+        <p>
+          Contanos tu idea o problema y te respondemos con una propuesta simple
+          y honesta.
+        </p>
+        <div class="cta-actions">
+          <a class="btn primary" href="mailto:jenaboteam@gmail.com">
+            jenaboteam@gmail.com
+          </a>
+          <a
+            class="btn ghost"
+            href="https://wa.me/5491160000000"
+            target="_blank"
+            rel="noopener"
+          >
+            Hablemos por WhatsApp
+          </a>
         </div>
       </section>
 
@@ -361,16 +254,16 @@
             <form class="admin-form" id="adminForm">
               <div class="form-grid">
                 <label>
+                  Titulo
+                  <input name="title" type="text" required />
+                </label>
+                <label>
                   Tipo de proyecto
                   <select name="type" required>
                     <option value="web">Web</option>
                     <option value="logos">Logos</option>
                     <option value="programas">Programas</option>
                   </select>
-                </label>
-                <label>
-                  Titulo
-                  <input name="title" type="text" required />
                 </label>
                 <label>
                   Categoria
@@ -406,18 +299,17 @@
                   />
                 </label>
                 <label>
-                  URL de imagen destacada
+                  Link imagen de portada
                   <input name="imageUrl" type="url" placeholder="https://..." />
                   <button class="media-helper" data-type="image" type="button">
-                    Subir imagen desde tu equipo
+                    Subir imagen
                   </button>
                   <span class="field-note"
-                    >Tambien podes copiar y pegar una imagen directamente en
-                    este campo.</span
+                    >O copia y pega una imagen en este campo.</span
                   >
                 </label>
                 <label>
-                  URL de video demo (solo programas)
+                  URL de video demo (solo aplicaciones)
                   <input
                     name="videoUrl"
                     type="url"
@@ -427,12 +319,11 @@
                     Subir video corto
                   </button>
                   <span class="field-note"
-                    >Ideal para mostrar como funciona el programa. MP4 liviano
-                    (hasta ~6 MB).</span
+                    >Video corto de demostracion de la aplicaión (~6mb)</span
                   >
                 </label>
                 <label>
-                  URL de detalle interno
+                  Link del proyecto
                   <input
                     name="caseStudyUrl"
                     type="url"
@@ -444,7 +335,7 @@
                   <textarea
                     name="extendedDescription"
                     rows="4"
-                    placeholder="Contanos mas en detalle que hicimos, pasos y resultado final."
+                    placeholder="Describi más en detalle que hicimos, pasos y resultado final."
                   ></textarea>
                 </label>
               </div>
@@ -466,28 +357,19 @@
 
     <footer class="footer">
       <div class="container footer-content">
-        <div>
-          <div class="brand footer-brand">
-            <span class="brand-accent">Jenabo</span>
-            <span>Estudio Digital</span>
-          </div>
+        <div class="brand footer-brand">
+          <span class="brand-accent">Jenabo</span>
+          <span>Estudio Digital</span>
           <p>
-            Diseños, webs y programas hechos desde Argentina para negocios y
-            organizaciones que quieren mostrarse y operar mejor online.
+            &copy; <span id="year"></span> Jenabo Todos los derechos reservados
+            |
+            <a href="mailto:jenaboteam@gmail.com">jenaboteam@gmail.com</a>
+            | Buenos Aires - Argentina
           </p>
-        </div>
-        <div class="footer-meta">
-          <a href="mailto:jenaboteam@gmail.com">jenaboteam@gmail.com</a>
-          <span>Buenos Aires - Argentina</span>
-          <span
-            >&copy; <span id="year"></span> Jenabo. Todos los derechos
-            reservados.</span
-          >
         </div>
       </div>
     </footer>
 
-    <div class="toast" id="toast"></div>
     <div class="modal" id="projectModal" aria-hidden="true">
       <div
         class="modal-content"
@@ -516,7 +398,7 @@
               href="#"
               target="_blank"
               rel="noopener"
-              >Abrir detalle externo</a
+              >Visitar proyecto</a
             >
           </div>
         </div>
