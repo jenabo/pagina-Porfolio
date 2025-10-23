@@ -1202,6 +1202,24 @@ document.addEventListener("DOMContentLoaded", async () => {
   // Inicializar Firebase Manager
   firebaseManager = new FirebaseManager();
 
+  // Auto-conectar con Firebase si hay configuración pública
+  if (window.JENABO_FIREBASE_CONFIG) {
+    const config = window.JENABO_FIREBASE_CONFIG;
+
+    // Verificar que la configuración no sea la de ejemplo
+    const isExampleConfig = config.apiKey === "TU_API_KEY_AQUI" ||
+                           config.apiKey.length < 20;
+
+    if (!isExampleConfig) {
+      try {
+        await firebaseManager.initialize(config);
+        console.log("Firebase conectado automáticamente");
+      } catch (error) {
+        console.error("Error al auto-conectar Firebase:", error);
+      }
+    }
+  }
+
   // Cargar proyectos (async)
   await loadProjects();
 
