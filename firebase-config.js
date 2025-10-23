@@ -25,16 +25,7 @@ const FIREBASE_CONFIG = {
 // No modifiques nada debajo de esta línea
 window.JENABO_FIREBASE_CONFIG = FIREBASE_CONFIG;
 
-// Debug temporal - muestra un indicador visual
+// Log silencioso (solo en consola para debug si es necesario)
 if (FIREBASE_CONFIG.apiKey !== "TU_API_KEY_AQUI") {
-  console.log("✅ Firebase config cargado:", FIREBASE_CONFIG.projectId);
-
-  // Crear indicador visual temporal (5 segundos)
-  setTimeout(() => {
-    const indicator = document.createElement('div');
-    indicator.style.cssText = 'position:fixed;top:10px;right:10px;background:#4caf50;color:white;padding:10px 20px;border-radius:5px;z-index:99999;font-family:sans-serif;';
-    indicator.textContent = '✅ Firebase: ' + FIREBASE_CONFIG.projectId;
-    document.body.appendChild(indicator);
-    setTimeout(() => indicator.remove(), 5000);
-  }, 1000);
+  console.log("✅ Firebase conectado:", FIREBASE_CONFIG.projectId);
 }
