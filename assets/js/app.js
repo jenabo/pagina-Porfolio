@@ -4,6 +4,9 @@ const ADMIN_PIN = "1234";
 const LATEST_LIMIT = 3;
 const CAROUSEL_INTERVAL = 6000;
 
+// Firebase Manager instance
+let firebaseManager = null;
+
 const adminPanel = document.getElementById("adminPanel");
 const adminAccess = document.getElementById("adminAccess");
 const adminForm = document.getElementById("adminForm");
@@ -58,6 +61,14 @@ const categorySelect = document.getElementById("categorySelect");
 const adminSubmitButton = adminForm?.querySelector('button[type="submit"]');
 
 const toast = document.getElementById("toast");
+
+const firebaseConfigSection = document.getElementById("firebaseConfig");
+const configForm = document.getElementById("configForm");
+const configStatus = document.getElementById("configStatus");
+const statusIndicator = document.getElementById("statusIndicator");
+const statusText = document.getElementById("statusText");
+const testConnectionBtn = document.getElementById("testConnection");
+const clearConfigBtn = document.getElementById("clearConfig");
 
 const MOTION_EASING = "cubic-bezier(0.4, 0, 0.2, 1)";
 const MOTION_DURATION = 360;
@@ -230,45 +241,45 @@ const processMediaFile = async (type, file) => {
   }
 
   try {
+    showToast(`Procesando ${type === "image" ? "imagen" : "video"}...`);
+
+    // Convertir a data URL (base64)
     const dataUrl = await readFileAsDataUrl(file);
+
     if (type === "image" && imageUrlInput) {
       imageUrlInput.value = dataUrl;
-      showToast("Imagen cargada en el formulario");
+      showToast("Imagen cargada correctamente");
     }
     if (type === "video" && videoUrlInput) {
       videoUrlInput.value = dataUrl;
-      showToast("Video cargado en el formulario");
+      showToast("Video cargado correctamente");
     }
   } catch (error) {
     console.error(error);
-    showToast("Hubo un problema al procesar el archivo");
+    showToast("Hubo un problema al procesar el archivo: " + error.message);
   }
 };
 
 const seedProjects = () => PROJECT_SEED_DATA.map((project) => normalizeProject(project));
 
-const loadProjects = () => {
-  const stored = localStorage.getItem(STORAGE_KEY);
-  if (!stored) {
-    projects = seedProjects();
-    saveProjects();
-    return;
+const loadProjects = async () => {
+  // Si Firebase está configurado, cargar desde Firestore
+  if (firebaseManager && firebaseManager.isConfigured) {
+    try {
+      const firebaseProjects = await firebaseManager.getProjects();
+      projects = firebaseProjects.map((item) => normalizeProject(item));
+      return;
+    } catch (error) {
+      console.error("Error al cargar desde Firebase:", error);
+      showToast("Error al cargar desde Firebase, usando datos locales");
+    }
   }
 
-  try {
-    const parsed = JSON.parse(stored);
-    projects = Array.isArray(parsed)
-      ? parsed.map((item) => normalizeProject(item))
-      : seedProjects();
-  } catch (error) {
-    console.error("No se pudieron leer los proyectos guardados", error);
-    projects = seedProjects();
-    saveProjects();
-  }
+  // Fallback: usar datos del archivo projects.js
+  projects = seedProjects();
 };
 
-const saveProjects = () => {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(projects));
+const saveProjects = async () => {
   renderProjects();
   renderLatest();
   renderAdminList();
@@ -598,6 +609,26 @@ document.addEventListener("copy", (event) => {
   showToast("Accion deshabilitada");
 });
 
+const updateFirebaseConfigUI = () => {
+  if (!firebaseManager || !statusIndicator || !statusText) return;
+
+  const isConfigured = firebaseManager.isConfigured;
+
+  if (isConfigured) {
+    statusIndicator.className = "status-indicator configured";
+    statusText.textContent = "Firebase configurado y conectado";
+    if (testConnectionBtn) testConnectionBtn.style.display = "inline-flex";
+    if (clearConfigBtn) clearConfigBtn.style.display = "inline-flex";
+    if (configForm) configForm.style.display = "none";
+  } else {
+    statusIndicator.className = "status-indicator";
+    statusText.textContent = "No configurado";
+    if (testConnectionBtn) testConnectionBtn.style.display = "none";
+    if (clearConfigBtn) clearConfigBtn.style.display = "none";
+    if (configForm) configForm.style.display = "grid";
+  }
+};
+
 const updateAdminUI = () => {
   if (!adminAccess || !adminForm || !adminLogout || !adminProjectList) return;
 
@@ -605,6 +636,12 @@ const updateAdminUI = () => {
   adminForm.style.display = adminMode ? "block" : "none";
   adminLogout.style.display = adminMode ? "inline-flex" : "none";
   adminProjectList.parentElement.style.display = adminMode ? "block" : "none";
+
+  if (firebaseConfigSection) {
+    firebaseConfigSection.style.display = adminMode ? "block" : "none";
+  }
+
+  updateFirebaseConfigUI();
 };
 
 const resetAdminForm = () => {
@@ -821,7 +858,7 @@ const closeProjectModal = () => {
   modalMedia.innerHTML = "";
 };
 
-const handleAdminFormSubmit = (event) => {
+const handleAdminFormSubmit = async (event) => {
   event.preventDefault();
   if (!adminMode) {
     showToast("Necesitas activar el modo admin");
@@ -846,7 +883,6 @@ const handleAdminFormSubmit = (event) => {
     : null;
 
   const rawProject = {
-    id: baseProject?.id ?? generateId(),
     type: formData.get("type"),
     title,
     category,
@@ -862,22 +898,49 @@ const handleAdminFormSubmit = (event) => {
 
   const project = normalizeProject(rawProject);
 
-  if (baseProject) {
-    const index = projects.findIndex((item) => item.id === baseProject.id);
-    if (index !== -1) {
-      projects[index] = project;
-      showToast("Proyecto actualizado");
-    }
-  } else {
-    projects.push(project);
-    showToast("Proyecto guardado correctamente");
-  }
+  try {
+    // Si Firebase está configurado, guardar en Firestore
+    if (firebaseManager && firebaseManager.isConfigured) {
+      if (baseProject) {
+        // Actualizar proyecto existente
+        await firebaseManager.updateProject(baseProject.id, project);
+        showToast("Proyecto actualizado en Firebase");
 
-  saveProjects();
-  resetAdminForm();
+        const index = projects.findIndex((item) => item.id === baseProject.id);
+        if (index !== -1) {
+          projects[index] = { ...project, id: baseProject.id };
+        }
+      } else {
+        // Crear nuevo proyecto
+        const newId = await firebaseManager.addProject(project);
+        projects.push({ ...project, id: newId });
+        showToast("Proyecto guardado en Firebase");
+      }
+    } else {
+      // Fallback: guardar localmente
+      project.id = baseProject?.id ?? generateId();
+
+      if (baseProject) {
+        const index = projects.findIndex((item) => item.id === baseProject.id);
+        if (index !== -1) {
+          projects[index] = project;
+          showToast("Proyecto actualizado (solo local, configura Firebase)");
+        }
+      } else {
+        projects.push(project);
+        showToast("Proyecto guardado (solo local, configura Firebase)");
+      }
+    }
+
+    await saveProjects();
+    resetAdminForm();
+  } catch (error) {
+    console.error("Error al guardar proyecto:", error);
+    showToast("Error al guardar: " + error.message);
+  }
 };
 
-const handleAdminListClick = (event) => {
+const handleAdminListClick = async (event) => {
   const target = event.target;
   if (!(target instanceof HTMLElement)) return;
 
@@ -894,18 +957,47 @@ const handleAdminListClick = (event) => {
   }
 
   if (action === "delete") {
-    if (projects[index].id === editingProjectId) {
-      resetAdminForm();
+    if (!confirm("¿Seguro que quieres eliminar este proyecto?")) {
+      return;
     }
-    projects.splice(index, 1);
-    saveProjects();
-    showToast("Proyecto eliminado");
+
+    try {
+      // Si Firebase está configurado, eliminar de Firestore
+      if (firebaseManager && firebaseManager.isConfigured) {
+        await firebaseManager.deleteProject(id);
+        showToast("Proyecto eliminado de Firebase");
+      } else {
+        showToast("Proyecto eliminado (solo local)");
+      }
+
+      if (projects[index].id === editingProjectId) {
+        resetAdminForm();
+      }
+
+      projects.splice(index, 1);
+      await saveProjects();
+    } catch (error) {
+      console.error("Error al eliminar proyecto:", error);
+      showToast("Error al eliminar: " + error.message);
+    }
   }
 
   if (action === "highlight") {
-    projects[index].date = new Date().toISOString();
-    saveProjects();
-    showToast("Proyecto marcado como nuevo");
+    try {
+      // Si Firebase está configurado, actualizar fecha en Firestore
+      if (firebaseManager && firebaseManager.isConfigured) {
+        await firebaseManager.updateProjectDate(id);
+        showToast("Proyecto marcado como nuevo en Firebase");
+      } else {
+        showToast("Proyecto marcado como nuevo (solo local)");
+      }
+
+      projects[index].date = new Date().toISOString();
+      await saveProjects();
+    } catch (error) {
+      console.error("Error al actualizar fecha:", error);
+      showToast("Error al actualizar: " + error.message);
+    }
   }
 };
 
@@ -931,6 +1023,86 @@ adminLogout?.addEventListener("click", () => {
 
 adminForm?.addEventListener("submit", handleAdminFormSubmit);
 adminProjectList?.addEventListener("click", handleAdminListClick);
+
+// Firebase Configuration handlers
+configForm?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  if (!adminMode) {
+    showToast("Necesitas activar el modo admin primero");
+    return;
+  }
+
+  const formData = new FormData(configForm);
+  const apiKey = formData.get("apiKey")?.trim();
+  const authDomain = formData.get("authDomain")?.trim();
+  const projectId = formData.get("projectId")?.trim();
+  const storageBucket = formData.get("storageBucket")?.trim();
+  const messagingSenderId = formData.get("messagingSenderId")?.trim();
+  const appId = formData.get("appId")?.trim();
+
+  if (!apiKey || !authDomain || !projectId || !storageBucket || !appId) {
+    showToast("Completa todos los campos obligatorios");
+    return;
+  }
+
+  const firebaseConfig = {
+    apiKey,
+    authDomain,
+    projectId,
+    storageBucket,
+    messagingSenderId,
+    appId
+  };
+
+  try {
+    showToast("Conectando con Firebase...");
+    await firebaseManager.initialize(firebaseConfig);
+    await firebaseManager.testConnection();
+    showToast("Conexion exitosa! Firebase configurado");
+    updateFirebaseConfigUI();
+
+    // Recargar proyectos desde Firebase
+    await loadProjects();
+    renderProjects();
+    renderLatest();
+    renderAdminList();
+  } catch (error) {
+    console.error("Error al configurar Firebase:", error);
+    showToast("Error: " + error.message);
+    firebaseManager.clearConfig();
+    updateFirebaseConfigUI();
+  }
+});
+
+testConnectionBtn?.addEventListener("click", async () => {
+  if (!firebaseManager || !firebaseManager.isConfigured) {
+    showToast("Firebase no esta configurado");
+    return;
+  }
+
+  try {
+    showToast("Probando conexion...");
+    await firebaseManager.testConnection();
+    showToast("Conexion exitosa!");
+  } catch (error) {
+    console.error("Error al probar conexion:", error);
+    showToast("Error: " + error.message);
+  }
+});
+
+clearConfigBtn?.addEventListener("click", () => {
+  if (!confirm("Seguro que quieres limpiar la configuracion de Firebase?")) {
+    return;
+  }
+
+  firebaseManager?.clearConfig();
+  updateFirebaseConfigUI();
+  showToast("Configuracion limpiada");
+
+  if (configForm) {
+    configForm.reset();
+  }
+});
 
 portfolioGrid?.addEventListener("click", handleProjectActionClick);
 
@@ -1026,8 +1198,13 @@ window.addEventListener("blur", () => {
   clearInterval(carouselTimer);
 });
 
-document.addEventListener("DOMContentLoaded", () => {
-  loadProjects();
+document.addEventListener("DOMContentLoaded", async () => {
+  // Inicializar Firebase Manager
+  firebaseManager = new FirebaseManager();
+
+  // Cargar proyectos (async)
+  await loadProjects();
+
   renderProjects();
   renderLatest();
   renderAdminList();

@@ -358,6 +358,96 @@
                 Salir del panel
               </button>
             </div>
+            <div class="firebase-config" id="firebaseConfig">
+              <h3>Configuracion de Firebase</h3>
+              <p class="config-note">
+                Configura Firebase para que los proyectos y las imagenes se
+                guarden en la nube. Los cambios seran instantaneos y visibles
+                para todos los visitantes.
+              </p>
+              <div class="config-status" id="configStatus">
+                <span class="status-indicator" id="statusIndicator"></span>
+                <span id="statusText">No configurado</span>
+                <button
+                  id="testConnection"
+                  class="btn ghost small"
+                  type="button"
+                  style="display: none"
+                >
+                  Probar conexion
+                </button>
+                <button
+                  id="clearConfig"
+                  class="btn ghost small"
+                  type="button"
+                  style="display: none"
+                >
+                  Limpiar configuracion
+                </button>
+              </div>
+              <form class="config-form" id="configForm">
+                <label>
+                  API Key
+                  <input
+                    name="apiKey"
+                    type="text"
+                    placeholder="AIza..."
+                    required
+                  />
+                </label>
+                <label>
+                  Auth Domain
+                  <input
+                    name="authDomain"
+                    type="text"
+                    placeholder="tu-proyecto.firebaseapp.com"
+                    required
+                  />
+                </label>
+                <label>
+                  Project ID
+                  <input
+                    name="projectId"
+                    type="text"
+                    placeholder="tu-proyecto"
+                    required
+                  />
+                </label>
+                <label>
+                  Storage Bucket
+                  <input
+                    name="storageBucket"
+                    type="text"
+                    placeholder="tu-proyecto.appspot.com"
+                    required
+                  />
+                </label>
+                <label>
+                  Messaging Sender ID
+                  <input
+                    name="messagingSenderId"
+                    type="text"
+                    placeholder="123456789"
+                  />
+                </label>
+                <label>
+                  App ID
+                  <input
+                    name="appId"
+                    type="text"
+                    placeholder="1:123:web:abc..."
+                    required
+                  />
+                </label>
+                <span class="field-note"
+                  >Obtiene estos datos en: Firebase Console → Project Settings
+                  → Tu app web → SDK setup and configuration</span
+                >
+                <button class="btn primary" type="submit">
+                  Guardar configuracion
+                </button>
+              </form>
+            </div>
             <form class="admin-form" id="adminForm">
               <div class="form-grid">
                 <label>
@@ -523,7 +613,13 @@
       </div>
     </div>
 
+    <!-- Firebase SDK (solo Firestore, sin Storage) -->
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+    <!-- App Scripts -->
     <script src="./assets/data/projects.js" defer></script>
+    <script src="./assets/js/firebase-config.js" defer></script>
     <script src="./assets/js/app.js" defer></script>
   </body>
 </html>

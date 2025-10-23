@@ -887,6 +887,87 @@ textarea:focus {
   color: white;
 }
 
+.firebase-config {
+  display: none;
+  margin-top: 32px;
+  padding: 24px;
+  background: rgba(16, 16, 32, 0.5);
+  border-radius: var(--radius-md);
+  border: 1px solid rgba(76, 229, 177, 0.2);
+}
+
+.firebase-config h3 {
+  font-size: 1.1rem;
+  margin-bottom: 8px;
+  color: var(--secondary);
+}
+
+.config-note {
+  font-size: 0.85rem;
+  color: rgba(214, 214, 255, 0.7);
+  margin-bottom: 20px;
+  line-height: 1.5;
+}
+
+.config-status {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: var(--radius-sm);
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.status-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.3);
+  flex-shrink: 0;
+}
+
+.status-indicator.configured {
+  background: var(--secondary);
+  box-shadow: 0 0 8px rgba(76, 229, 177, 0.5);
+}
+
+.config-status span:not(.status-indicator) {
+  font-size: 0.9rem;
+  color: rgba(214, 214, 255, 0.85);
+}
+
+.config-form {
+  display: grid;
+  gap: 18px;
+}
+
+.config-form label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: rgba(214, 214, 255, 0.95);
+}
+
+.config-form input {
+  width: 100%;
+  padding: 10px 14px;
+  border-radius: var(--radius-sm);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  background: rgba(16, 16, 32, 0.6);
+  color: white;
+  font-size: 0.9rem;
+  transition: var(--transition);
+}
+
+.config-form input:focus {
+  outline: none;
+  border-color: var(--secondary);
+  background: rgba(16, 16, 32, 0.8);
+}
+
 .footer {
   padding: 48px 0;
   background: rgba(5, 5, 12, 0.92);
