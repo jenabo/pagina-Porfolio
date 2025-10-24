@@ -1,0 +1,196 @@
+:root {
+  --bg: #06060f;
+  --primary: #fffbda;
+  --secondary: #4ce5b1;
+  --accent: #6a5ef5;
+  --radius: 20px;
+  --gradient: linear-gradient(135deg, #6a5ef5, #4ce5b1);
+  --shadow: 0 0.2rem 0.8rem var(--accent);
+  --transition: all 0.25s ease;
+}
+
+* {
+  margin: 0;
+  font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+    sans-serif;
+}
+body {
+  background-color: var(--bg);
+  color: var(--primary);
+}
+/*----------------------------------------------------------------------------------------*/
+/*-------------------------------------- HEADER ------------------------------------------*/
+header {
+  font-size: 1rem;
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+
+  color: var(--primary);
+  position: sticky;
+  top: 0;
+
+  background: transparent;
+  backdrop-filter: blur(10px);
+}
+/*------------------- LOGO --------------------*/
+.brand {
+  padding: 1.5% 20% 1.5% 20%;
+}
+.brand a {
+  text-decoration: none;
+  color: var(--secondary);
+}
+/*---------------------------------------------*/
+/*----------------------------------------------------------------------------------------*/
+/*---------------------------------------- MAIN ------------------------------------------*/
+main {
+  background: radial-gradient(
+      circle at top left,
+      rgba(106, 94, 245, 0.4),
+      transparent 45%
+    ),
+    radial-gradient(
+      circle at bottom right,
+      rgba(76, 229, 177, 0.3),
+      transparent 35%
+    );
+  min-height: 100vh;
+  justify-items: center;
+}
+/*---------------------------------------------*/
+/*-------------------- HERO -------------------*/
+.hero {
+  width: 80%;
+
+  text-align: center;
+  justify-items: center;
+
+  padding: 5rem 0 5rem 0;
+}
+.hero-title {
+  width: 70%;
+
+  font-size: 4rem;
+  font-weight: 900;
+
+  padding: 0 0 2rem 0;
+}
+.hero-subtitle {
+  width: 85%;
+  padding: 0 0 2rem 0;
+}
+/*---------------------------------------------*/
+/*------------------- BUTTON -------------------*/
+.button-container {
+  padding: 0 0 2rem 0;
+}
+.button {
+  background: var(--gradient);
+  margin: 0.5rem;
+  padding: 0.7rem;
+  border-radius: var(--radius);
+
+  font-weight: 900;
+  text-decoration: none;
+  color: var(--bg);
+}
+/*---------------------------------------------*/
+/*---------------- HIGHLIGHTS -----------------*/
+.highlight-container {
+  display: flex;
+  justify-content: space-between;
+}
+.highlight {
+  width: 30%;
+}
+.highlight p {
+  font-size: 0.7rem;
+}
+.highlight-title {
+  font-size: 1.2rem;
+  font-weight: bolder;
+  text-transform: uppercase;
+}
+/*---------------------------------------------*/
+/*-------------- LATEST -----------------------*/
+.latest {
+  width: 100%;
+  padding: 0 0 5rem 0;
+  justify-items: center;
+}
+.latest-card {
+  padding: 2rem 0 2rem 0;
+  width: 75%;
+}
+.latest-card p {
+  padding: 1rem 0 1rem 0;
+}
+.latest button {
+  background: var(--gradient);
+  margin: 1rem 0.1rem 1rem 0;
+  padding: 0.7rem;
+  border-radius: var(--radius);
+  border-style: none;
+
+  font-weight: 900;
+  text-decoration: none;
+  color: var(--bg);
+
+  cursor: pointer;
+  box-shadow: var(--shadow);
+}
+.latest button:hover {
+  background: var(--primary);
+}
+/*---------------------------------------------*/
+/*-------------- ABOUT ------------------------*/
+.about {
+  width: 75%;
+  padding: 0 0 5rem 0;
+}
+.about h1 {
+  padding: 0 0 2rem 0;
+}
+.about h2 {
+  padding: 1rem 0 1rem 0;
+}
+.step-container {
+  padding: 2rem 0 2rem 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.step {
+  width: 20%;
+}
+.step-number {
+  background-color: var(--secondary);
+  color: #09412e;
+  font-weight: 900;
+  border-radius: 20px;
+  padding: 0.5rem 0.8rem;
+  margin: 0 0 10rem 0;
+}
+.step h3 {
+  padding: 0 0 1rem 0;
+}
+.step p {
+  text-align: right;
+}
+/*----------------------------------------------------------------------------------------*/
+/*----------------------------------- FOOTER ---------------------------------------------*/
+footer {
+  background-color: var(--accent);
+  color: var(--primary);
+  text-decoration: none;
+  text-align: center;
+  padding: 2rem 0 2rem;
+}
+footer a {
+  color: var(--primary);
+  text-decoration: none;
+}
+/*---------------------------------------------*/
+/*----------------------------------------------------------------------------------------*/
+/*----------------------------------------------------------------------------------------*/
